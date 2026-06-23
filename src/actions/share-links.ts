@@ -32,7 +32,10 @@ export async function getShareLinkByQuoteId(
     .limit(1)
     .maybeSingle()
 
-  if (error) throw new Error(`공유 링크 조회 실패: ${error.message}`)
+  if (error) {
+    console.error('공유 링크 조회 실패:', error.message)
+    return null
+  }
   if (!data) return null
 
   return toShareLink(data as ShareLinkRow)
@@ -52,7 +55,10 @@ export async function getShareLinkByToken(
     .eq('token', token)
     .maybeSingle()
 
-  if (error) throw new Error(`공유 링크 조회 실패: ${error.message}`)
+  if (error) {
+    console.error('공유 링크 조회 실패:', error.message)
+    return null
+  }
   if (!data) return null
 
   return toShareLink(data as ShareLinkRow)

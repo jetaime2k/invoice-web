@@ -34,7 +34,10 @@ export async function getQuotes(): Promise<Quote[]> {
     .select('*')
     .order('issued_at', { ascending: false })
 
-  if (error) throw new Error(`견적서 목록 조회 실패: ${error.message}`)
+  if (error) {
+    console.error('견적서 목록 조회 실패:', error.message)
+    return []
+  }
 
   return (data as QuoteRow[]).map(toQuote)
 }
@@ -53,7 +56,8 @@ export async function getQuoteById(id: string): Promise<QuoteWithItems | null> {
 
   if (error) {
     if (error.code === 'PGRST116') return null
-    throw new Error(`견적서 조회 실패: ${error.message}`)
+    console.error('견적서 조회 실패:', error.message)
+    return null
   }
 
   const row = data as QuoteRow & { quote_items: QuoteItemRow[] }
