@@ -46,3 +46,7 @@ next-env.d.ts
 .shrimp/
 .playwright-mcp/
 --test
+
+# notion export data
+Inovices/
+Items/
