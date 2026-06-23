@@ -1,6 +1,7 @@
 'use client'
 
-import { useActionState, useState } from 'react'
+import { useActionState, useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { EyeIcon, EyeOffIcon, AlertCircle, Loader2 } from 'lucide-react'
@@ -33,7 +34,16 @@ interface LoginFormProps {
 
 export function LoginForm({ showRegisteredMessage }: LoginFormProps) {
   const [showPassword, setShowPassword] = useState(false)
-  const [error, formAction, isPending] = useActionState(signIn, null)
+  const [state, formAction, isPending] = useActionState(signIn, null)
+  const router = useRouter()
+
+  useEffect(() => {
+    if (state?.redirectTo) {
+      router.push(state.redirectTo)
+    }
+  }, [state, router])
+
+  const error = state?.error
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),

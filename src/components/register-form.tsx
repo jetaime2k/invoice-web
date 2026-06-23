@@ -1,6 +1,7 @@
 'use client'
 
-import { useActionState, useState } from 'react'
+import { useActionState, useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { EyeIcon, EyeOffIcon, AlertCircle, Loader2 } from 'lucide-react'
@@ -31,7 +32,16 @@ import { registerSchema, type RegisterFormData } from '@/lib/schemas/auth'
 export function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [error, formAction, isPending] = useActionState(signUp, null)
+  const [state, formAction, isPending] = useActionState(signUp, null)
+  const router = useRouter()
+
+  useEffect(() => {
+    if (state?.redirectTo) {
+      router.push(state.redirectTo)
+    }
+  }, [state, router])
+
+  const error = state?.error
 
   const form = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
