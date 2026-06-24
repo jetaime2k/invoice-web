@@ -67,9 +67,10 @@ export default async function SharedQuotePage({
       <div className="flex items-center justify-center py-16">
         <Card className="w-full max-w-md text-center shadow-sm">
           <CardContent className="pt-8 pb-8">
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-amber-100">
+            {/* amber 경고: 다크 모드 대응 — CSS 변수 색상 사용 */}
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
               <AlertCircle
-                className="h-7 w-7 text-amber-500"
+                className="h-7 w-7 text-amber-500 dark:text-amber-400"
                 aria-hidden="true"
               />
             </div>
