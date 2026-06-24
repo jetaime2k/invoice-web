@@ -140,6 +140,7 @@ export const MOCK_QUOTES: QuoteWithItems[] = [
     issuedAt: '2024-11-01',
     expiresAt: '2024-12-01',
     syncedAt: '2024-11-01T09:00:00Z',
+    shareToken: null,
     items: MOCK_ITEMS_001,
   },
   {
@@ -154,6 +155,7 @@ export const MOCK_QUOTES: QuoteWithItems[] = [
     issuedAt: '2024-11-15',
     expiresAt: '2024-12-15',
     syncedAt: '2024-11-15T14:30:00Z',
+    shareToken: null,
     items: MOCK_ITEMS_002,
   },
   {
@@ -168,6 +170,7 @@ export const MOCK_QUOTES: QuoteWithItems[] = [
     issuedAt: '2024-10-01',
     expiresAt: null,
     syncedAt: '2024-10-01T10:00:00Z',
+    shareToken: null,
     items: MOCK_ITEMS_003,
   },
 ]

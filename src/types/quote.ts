@@ -19,6 +19,8 @@ export type Quote = {
   issuedAt: string
   expiresAt: string | null
   syncedAt: string
+  /** 활성 공유 링크 토큰 (없으면 null) */
+  shareToken: string | null
 }
 
 export type QuoteItem = {

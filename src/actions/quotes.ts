@@ -7,7 +7,12 @@ import type { Tables } from '@/types/database.types'
 type QuoteRow = Tables<'quotes'>
 type QuoteItemRow = Tables<'quote_items'>
 
-function toQuote(row: QuoteRow): Quote {
+/** 견적서 행에 활성 공유 링크 토큰이 포함된 타입 */
+type QuoteRowWithShareToken = QuoteRow & {
+  share_links: { token: string }[] | null
+}
+
+function toQuote(row: QuoteRow, shareToken: string | null = null): Quote {
   return {
     id: row.id,
     userId: row.user_id,
@@ -20,18 +25,21 @@ function toQuote(row: QuoteRow): Quote {
     issuedAt: row.issued_at,
     expiresAt: row.expires_at,
     syncedAt: row.synced_at,
+    shareToken,
   }
 }
 
 /**
  * 로그인한 발행자의 견적서 목록 조회
+ * - 활성 공유 링크 토큰을 LEFT JOIN하여 함께 반환
  */
 export async function getQuotes(): Promise<Quote[]> {
   const supabase = await createClient()
 
-  const { data, error } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabase as any)
     .from('quotes')
-    .select('*')
+    .select('*, share_links!left(token, is_active)')
     .order('issued_at', { ascending: false })
 
   if (error) {
@@ -39,7 +47,16 @@ export async function getQuotes(): Promise<Quote[]> {
     return []
   }
 
-  return (data as QuoteRow[]).map(toQuote)
+  return (data as QuoteRowWithShareToken[]).map(row => {
+    // is_active = true 인 링크만 필터링하여 첫 번째 토큰 추출
+    const activeLinks = Array.isArray(row.share_links)
+      ? (
+          row.share_links as Array<{ token: string; is_active: boolean }>
+        ).filter(link => link.is_active)
+      : []
+    const shareToken = activeLinks.length > 0 ? activeLinks[0].token : null
+    return toQuote(row, shareToken)
+  })
 }
 
 /**
